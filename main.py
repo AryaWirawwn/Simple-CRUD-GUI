@@ -80,7 +80,7 @@ def createWindow():
     createWindow.geometry("300x400")
 
     # Variabel
-    nameVar = tk.StringVar()
+    nameVar = tk.StringVar(value = "Nama Barang")
     priceVar = tk.IntVar()
     quantityVar = tk.IntVar()
 
@@ -157,6 +157,86 @@ def readWindow():
     for i in range(len(data["Nomor"])):
         table.insert(parent = "", index = 0, values = (data["Nomor"][i], data["Nama Barang"][i], data["Harga Barang"][i], data["Kuantitas"][i]))
 
+def updateWindow():
+    # Window Settings
+    updateWindow = tk.Toplevel(app)
+    updateWindow.title("Update Menu")
+    updateWindow.geometry("300x400")
+    
+    # Variabel
+    itemNumberVar = tk.IntVar()
+
+    # Update Input Number
+    # Label
+    updateLabelNumber = ttk.Label(updateWindow, text = "Masukkan Nomor Barang")
+    updateLabelNumber.pack(pady = 5)
+
+    # Input
+    updateEntryNumber = ttk.Entry(updateWindow, textvariable = itemNumberVar)
+    updateEntryNumber.pack(pady = 5)
+
+    # Update Button
+    def mainUpdateWindow():
+        itemNumber = itemNumberVar.get()
+        if itemNumber in data["Nomor"]:
+            # Index
+            index = data["Nomor"].index(itemNumber)
+
+            # Variables
+            nameVar = tk.StringVar(value=data['Nama Barang'][index])
+            priceVar = tk.IntVar(value=data['Harga Barang'][index])
+            quantityVar = tk.IntVar(value=data['Kuantitas'][index])
+
+            # Name
+            # Label
+            updateLabelName = ttk.Label(updateWindow, text="Nama")
+            updateLabelName.pack(pady=5)
+
+            # Input
+            updateEntryName = ttk.Entry(updateWindow, textvariable=nameVar)
+            updateEntryName.pack(pady=5)
+
+            # Price
+            # Label
+            updateLabelPrice = ttk.Label(updateWindow, text="Harga")
+            updateLabelPrice.pack(pady=5)
+
+            # Input
+            updateEntryPrice = ttk.Entry(updateWindow, textvariable=priceVar)
+            updateEntryPrice.pack(pady=5)
+
+            # Quantity
+            # Label
+            updateLabelQuantity = ttk.Label(updateWindow, text="Kuantitas")
+            updateLabelQuantity.pack(pady=5)
+
+            # Input
+            updateEntryQuantity = ttk.Entry(updateWindow, textvariable=quantityVar)
+            updateEntryQuantity.pack(pady=5)
+
+            # Button
+            def saveUpdate():
+                newName = nameVar.get()
+                newPrice = priceVar.get()
+                newQuantity = quantityVar.get()
+                if newName.strip():
+                    data["Nama Barang"][index] = newName
+                    data["Harga Barang"][index] = newPrice
+                    data["Kuantitas"][index] = newQuantity
+
+                    showinfo(title = "Pesan", message = f"Barang Dengan Nomor {itemNumber} Berhasil Diubah")
+                else:
+                    showinfo(title = "Pesan", message = "Nama Tidak Boleh Kosong")
+
+            saveUpdateButton = ttk.Button(updateWindow, text = "Save", command = saveUpdate)
+            saveUpdateButton.pack(pady = 5)
+        else:
+            showinfo(title = "Pesan", message = f"Barang Dengan Nomor {itemNumber} Tidak Ditemukan")
+
+    updateButton = ttk.Button(updateWindow, text = "Update", command = mainUpdateWindow)
+    updateButton.pack(pady = 5)
+
+
 def deleteWindow():
     # Window Settings
     deleteWindow = tk.Toplevel(app)
@@ -194,7 +274,7 @@ createButton = ttk.Button(crudMenuFrame, text = "Create", command = createWindow
 createButton.pack(pady = 5)
 readButton = ttk.Button(crudMenuFrame, text = "Read", command = readWindow)
 readButton.pack(pady = 5)
-updateButton = ttk.Button(crudMenuFrame, text = "Update")
+updateButton = ttk.Button(crudMenuFrame, text = "Update", command = updateWindow)
 updateButton.pack(pady = 5)
 deleteButton = ttk.Button(crudMenuFrame, text = "Delete", command = deleteWindow)
 deleteButton.pack(pady = 5)
