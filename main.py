@@ -10,6 +10,7 @@ app.title("Simple CRUD")
 
 # Dictionary
 data = {
+    "Nomor": [1, 2, 3],
     "Nama Barang": ["Roti", "Air Mineral", "Pentol"],
     "Harga Barang": [2000, 4000, 2000],
     "Kuantitas":[12, 22, 12]
@@ -60,7 +61,7 @@ def login():
         showinfo(title = "Pesan", message = pesan)
     else:
         pesan = "Username dan Password Salah!"
-        showinfo(title = "pesan", message = pesan)
+        showinfo(title = "Pesan", message = pesan)
 
 loginButton = ttk.Button(loginFrame, text = "Login", command = login)
 loginButton.pack(pady = 10)
@@ -123,6 +124,8 @@ def create(name, price, quantity):
     if name.strip():
         if str(price).strip():
             if str(quantity).strip():
+                nomor = len(data["Nomor"]) + 1
+                data["Nomor"].append(nomor)
                 data["Nama Barang"].append(name)
                 data["Harga Barang"].append(price)
                 data["Kuantitas"].append(quantity)
@@ -143,23 +146,57 @@ def readWindow():
     readWindow.geometry("300x400")
 
     # Table
-    table = ttk.Treeview(readWindow, columns = ("Nama", "Harga", "Kuantitas"), show = "headings")
-
+    table = ttk.Treeview(readWindow, columns = ("Nomor", "Nama", "Harga", "Kuantitas"), show = "headings")
+    
+    table.heading("Nomor", text = "Nomor")
     table.heading("Nama", text = "Nama Barang")
     table.heading("Harga", text = "Harga Barang")
     table.heading("Kuantitas", text = "Kuantitas")
-    table.pack(fill = "both", expand = True)
+    table.pack(fill = "x", expand = True)
 
-    for i in range(len(data["Nama Barang"])):
-        table.insert(parent = "", index = 0, values = (data["Nama Barang"][i], data["Harga Barang"][i], data["Kuantitas"][i]))
+    for i in range(len(data["Nomor"])):
+        table.insert(parent = "", index = 0, values = (data["Nomor"][i], data["Nama Barang"][i], data["Harga Barang"][i], data["Kuantitas"][i]))
 
+def deleteWindow():
+    # Window Settings
+    deleteWindow = tk.Toplevel(app)
+    deleteWindow.title("Delete Menu")
+    deleteWindow.geometry("300x400")
+
+    # Variable
+    itemNumberVar = tk.IntVar()
+    
+    # Delete
+    # Label
+    deleteLabel = ttk.Label(deleteWindow, text = "Masukkan Nomor Barang")
+    deleteLabel.pack(pady = 5)
+
+    # Input
+    deleteEntry = ttk.Entry(deleteWindow, textvariable = itemNumberVar)
+    deleteEntry.pack(pady = 5 )
+
+    # Button
+    def deleteData():
+        itemNumber = itemNumberVar.get()
+        if itemNumber in data["Nomor"]:
+            index = data["Nomor"].index(itemNumber)
+            data["Nomor"].pop(index)
+            data["Nama Barang"].pop(index)
+            data["Harga Barang"].pop(index)
+            data["Kuantitas"].pop(index)
+            showinfo(title = "Pesan", message = f"Barang Nomor {itemNumber} berhasil dihapus")
+
+    deleteButton = ttk.Button(deleteWindow, text = "Delete", command = deleteData)
+    deleteButton.pack(pady = 5)
+
+# Button
 createButton = ttk.Button(crudMenuFrame, text = "Create", command = createWindow)
 createButton.pack(pady = 5)
 readButton = ttk.Button(crudMenuFrame, text = "Read", command = readWindow)
 readButton.pack(pady = 5)
 updateButton = ttk.Button(crudMenuFrame, text = "Update")
 updateButton.pack(pady = 5)
-deleteButton = ttk.Button(crudMenuFrame, text = "Delete")
+deleteButton = ttk.Button(crudMenuFrame, text = "Delete", command = deleteWindow)
 deleteButton.pack(pady = 5)
 
 # Loop
