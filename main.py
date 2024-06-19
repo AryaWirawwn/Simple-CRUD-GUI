@@ -10,9 +10,9 @@ app.title("Simple CRUD")
 
 # Dictionary
 data = {
-    "Nama Barang": [],
-    "Harga Barang": [],
-    "Kuantitas":[]
+    "Nama Barang": ["Roti", "Air Mineral", "Pentol"],
+    "Harga Barang": [2000, 4000, 2000],
+    "Kuantitas":[12, 22, 12]
 }
 
 # Frame
@@ -71,6 +71,7 @@ crudMenuFrame = ttk.Frame(app)
 def crudMenu():
     crudMenuFrame.pack(fill = "both", expand = True)
 
+# Create Menu
 def createWindow():
     # Window Settings
     createWindow = tk.Toplevel(app)
@@ -117,6 +118,7 @@ def createWindow():
     enterButton = ttk.Button(createWindow, text = "Enter", command = enterData)
     enterButton.pack(pady = 5)
 
+# Untuk Memasukkan Data
 def create(name, price, quantity):
     if name.strip():
         if str(price).strip():
@@ -133,9 +135,27 @@ def create(name, price, quantity):
     else:
         showinfo(title = "Pesan", message = "Nama Tidak Boleh Kosong")
 
+# Read Menu
+def readWindow():
+    # Window Settings
+    readWindow = tk.Toplevel(app)
+    readWindow.title("Read Menu")
+    readWindow.geometry("300x400")
+
+    # Table
+    table = ttk.Treeview(readWindow, columns = ("Nama", "Harga", "Kuantitas"), show = "headings")
+
+    table.heading("Nama", text = "Nama Barang")
+    table.heading("Harga", text = "Harga Barang")
+    table.heading("Kuantitas", text = "Kuantitas")
+    table.pack(fill = "both", expand = True)
+
+    for i in range(len(data["Nama Barang"])):
+        table.insert(parent = "", index = 0, values = (data["Nama Barang"][i], data["Harga Barang"][i], data["Kuantitas"][i]))
+
 createButton = ttk.Button(crudMenuFrame, text = "Create", command = createWindow)
 createButton.pack(pady = 5)
-readButton = ttk.Button(crudMenuFrame, text = "Read")
+readButton = ttk.Button(crudMenuFrame, text = "Read", command = readWindow)
 readButton.pack(pady = 5)
 updateButton = ttk.Button(crudMenuFrame, text = "Update")
 updateButton.pack(pady = 5)
